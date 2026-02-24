@@ -1,4 +1,3 @@
-# EnglishBGSU
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -6,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Polyglot">
-    <title>Мій Словник Pro</title>
+    <meta name="apple-mobile-web-app-title" content="Border English">
+    <title>Мій Словник Pro: Кордон та Митниця</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -47,14 +46,16 @@
         }
 
         #word-to-translate {
-            font-size: 32px; font-weight: bold; color: #007aff; margin: 15px 0;
+            font-size: 30px; font-weight: bold; color: #007aff; margin: 15px 0;
             display: flex; justify-content: center; align-items: center; gap: 10px;
+            word-break: break-word; /* Щоб довгі слова не вилазили за екран */
         }
         
         .audio-btn {
             background-color: #f2f2f7; color: #007aff; width: 40px; height: 40px;
             border-radius: 20px; padding: 0; margin: 0; display: flex;
             justify-content: center; align-items: center; font-size: 20px;
+            flex-shrink: 0; /* Щоб кнопка не стискалась */
         }
 
         .option-btn { background-color: #e5e5ea; color: #1c1c1e; margin: 6px 0; }
@@ -69,20 +70,18 @@
         .wrong { color: #ff3b30; }
         .hidden { display: none !important; }
 
-        /* Верхня панель кнопок */
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .library-btn { background-color: #34c759; margin: 0; flex-grow: 1; margin-right: 10px; }
         .admin-lock-btn { background-color: #34495e; width: auto; margin: 0; padding: 14px 15px; }
         
-        /* Панель адміністратора */
         .admin-panel { background-color: #2c3e50; color: white; border: 2px solid #f1c40f; }
         .admin-panel h2 { color: #f1c40f; }
         .admin-panel textarea { background-color: #34495e; color: white; border-color: #7f8c8d; }
         .admin-panel button { background-color: #f1c40f; color: #2c3e50; font-weight: bold; }
         .close-admin-btn { background-color: #e74c3c !important; color: white !important; margin-top: 5px !important; }
 
-        #word-list { text-align: left; max-height: 250px; overflow-y: auto; padding: 0; list-style: none; }
-        #word-list li { padding: 10px 0; border-bottom: 1px solid #e5e5ea; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+        #word-list { text-align: left; max-height: 350px; overflow-y: auto; padding: 0; list-style: none; }
+        #word-list li { padding: 10px 0; border-bottom: 1px solid #e5e5ea; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
         .word-text { flex-grow: 1; padding-right: 10px; }
         .action-btns button { width: auto; padding: 6px 10px; margin: 0 2px; font-size: 14px; border-radius: 6px; }
         .btn-delete { background-color: #ff3b30; }
@@ -100,7 +99,7 @@
 
     <div id="admin-panel" class="container admin-panel hidden">
         <h2>🛠 Експорт Бази</h2>
-        <p style="font-size: 13px; color: #bdc3c7;">Скопіюй цей текст і надішли другу. Він зможе вставити його в поле "Додати слова" у своєму додатку.</p>
+        <p style="font-size: 13px; color: #bdc3c7;">Скопіюй цей текст і надішли другу.</p>
         <textarea id="export-text" rows="5" readonly></textarea>
         <button onclick="copyExport()">📋 Скопіювати все</button>
         <button class="close-admin-btn" onclick="closeAdmin()">Закрити</button>
@@ -108,8 +107,8 @@
 
     <div class="container">
         <h2>Додати власні слова</h2>
-        <p style="font-size: 13px; color: #8e8e93; margin-top: -10px;">Слово - Переклад - Приклад (необов'язково)</p>
-        <textarea id="words-input" rows="3" placeholder="apple - яблуко - I eat a red apple"></textarea>
+        <p style="font-size: 13px; color: #8e8e93; margin-top: -10px;">Слово - Переклад - Приклад</p>
+        <textarea id="words-input" rows="3" placeholder="word - переклад - example"></textarea>
         <button onclick="addWordsBulk()">Додати</button>
     </div>
 
@@ -159,12 +158,410 @@
     </div>
 
     <script>
-        // Базові слова, які завантажуються всім (ти можеш залишити їх або видалити)
+        // ВЕЛИКА БАЗА СЛІВ
         const SHARED_LIBRARY = `
-        apple - яблуко - I eat an apple
-        always - завжди - I always wake up early
-        sun - сонце - The sun is hot
-        beautiful - красивий - She is beautiful
+to border on - межувати - Ukraine borders on several European countries.
+neighbour - сусід - Poland is our western neighbour.
+adjacent - суміжний - Please wait in the adjacent room.
+border / frontier - кордон - You must show your passport at the border.
+border guard - прикордонник - The border guard checked my documents.
+marine - морський - We protect our marine borders.
+independent - незалежний - Ukraine is an independent state.
+to pursue policy - проводити політику - The government pursues a peaceful policy.
+coexistence - співіснування - Peaceful coexistence is important for all nations.
+mutual - взаємний - We signed an agreement of mutual support.
+respect - повага - You must treat the officers with respect.
+hospitality - гостинність - Ukrainians are known for their hospitality.
+peculiarity - особливість - Every culture has its own peculiarity.
+to maintain peace - підтримувати мир - The UN aims to maintain peace.
+relations - стосунки - Diplomatic relations were established yesterday.
+former - колишній - He is a former police officer.
+abroad - за кордоном - She studies abroad.
+law enforcement - правопорядок - Law enforcement agencies are investigating the crime.
+foreign / alien - іноземний - I enjoy learning foreign languages.
+check point / port of entry - пункт пропуску - We stopped at the border check point.
+to represent - представляти - I represent the customs office.
+duty - обов'язок, мито - It is my duty to protect the country.
+educated - освічений - We need highly educated specialists.
+polite - ввічливий - Please be polite to the passengers.
+vigilant - пильний - Border guards must always be vigilant.
+sacred - священний - Defending the homeland is a sacred duty.
+to remember - пам'ятати - I always remember my first day on duty.
+to perish - загинути - Many soldiers perished in the war.
+unequal - нерівний - The fight was unequal, but they won.
+to protect - захищати - Our mission is to protect the citizens.
+to guard - охороняти - Two dogs guard the perimeter.
+valid - дійсний - Your passport is valid for ten years.
+respectful - шанобливий - Be respectful to older people.
+partnership - партнерство - We built a strong partnership with our allies.
+to implement - запровадити - They plan to implement new security rules.
+approach - підхід - We need a new approach to this problem.
+to deploy - розгортати (війська) - The general decided to deploy more troops.
+impact - вплив - The new law will have a huge impact.
+to relate - відноситись (до) - This document does not relate to your case.
+crossroads - перехрестя доріг - Turn left at the crossroads.
+to assist - допомагати - I will assist you with your luggage.
+to demand - вимагати - The officer has the right to demand your ID.
+commitment - відданість - We appreciate your commitment to the job.
+integrity - цілісність - We must protect the territorial integrity of the state.
+global coverage - всебічне охоплення - The new system provides global coverage.
+to ensure - забезпечити, гарантувати - We must ensure the safety of all passengers.
+inviolability - недоторканність - The constitution guarantees the inviolability of the home.
+to engage - вступати в бій - The squad had to engage the enemy.
+to enhance - покращити - We need to enhance our security measures.
+to eliminate - усувати, ліквідувати - The threat was completely eliminated.
+redundancies - надлишки, багатослівність - Try to avoid redundancies in your report.
+illicit items - предмети, що забороняється ввозити/вивозити - Dogs are trained to sniff out illicit items.
+controlled substance - заборонена речовина - Heroin is a controlled substance.
+to accomplish - виконувати - We accomplished our mission successfully.
+to develop a plan - розробити план - We need to develop a plan for the evacuation.
+to subject to - підлягати, підкоряти - All passengers are subject to a security check.
+to prevent - попередити - Cameras help to prevent crimes.
+to streamline - прискорити - This software will streamline the registration process.
+to be installed - бути встановленим - The new scanners will be installed tomorrow.
+to obtain - отримати - You need to obtain a visa first.
+to intercept - затримати - The patrol intercepted a suspicious vehicle.
+inadmissible - недопустимий - Such behavior is inadmissible here.
+challenging - що кидає виклик, вимагає уваги - Guarding this border is a challenging task.
+to meet the demands - відповідати вимогам - The equipment must meet the demands of the modern military.
+customer - споживач - The customer is always right.
+search - пошук - The police conducted a search of the building.
+smuggling - контрабанда - Smuggling is a serious crime.
+to combat - боротися - We use dogs to combat drug trafficking.
+step by step - крок за кроком - We will learn the procedure step by step.
+implementation - втілення - The implementation of the new law starts today.
+border protection - охорона кордону - Border protection is our main priority.
+provide border control - здійснювати прикордонний контроль - These officers provide border control at the airport.
+border guard authorities - органи прикордонної служби - You must contact the border guard authorities.
+enhance partnership - посилювати співпрацю - We aim to enhance partnership with neighboring countries.
+smuggle weapons - незаконно перевозити зброю - They tried to smuggle weapons across the border.
+restrain drug trafficking - стримувати наркоторгівлю - We work together to restrain drug trafficking.
+operation-search activity - оперативно-розшукова діяльність - The unit is engaged in operation-search activity.
+illegal entry - незаконний в’їзд - He was arrested for illegal entry into the country.
+comply with standards - відповідати стандартам - Your documents must comply with international standards.
+combine the functions - поєднувати функції - This device combines the functions of a scanner and a camera.
+missions assigned - покладені завдання - The squad successfully completed all missions assigned.
+undergo changes - зазнавати змін - The border policy will undergo changes next year.
+aimed at enforcement - спрямований на забезпечення виконання - The new rules are aimed at enforcement of security.
+current legislation - чинне законодавство - We operate strictly within current legislation.
+joint border guard operations - спільні операції прикордонних служб - We conduct joint border guard operations with Poland.
+deny border crossing - відмовити у перетині кордону - The guard had to deny border crossing due to fake documents.
+prevention of crimes - запобігання злочинам - The prevention of crimes is highly important.
+inspection of travellers - перевірка мандрівників - The inspection of travellers took about an hour.
+counteraction is allocated to - протидія спрямована на - The budget for counteraction is allocated to new equipment.
+admission of passengers - пропуск пасажирів - The admission of passengers is currently suspended.
+identify and eliminate violators - виявляти та усувати порушників - Our goal is to identify and eliminate violators quickly.
+permit border crossing - дозволяти перетин кордону - Only the chief can permit border crossing in this case.
+is responsible for - несе відповідальність за - He is responsible for passport control.
+ancient - давній, старовинний - They found an ancient coin during the excavation.
+ancestor - предок - My ancestors lived in this village.
+root - коріння, причина - Let's find the root of the problem.
+to stem - зростати - Her confidence stems from her experience.
+to stretch - простиратися - The forest stretches for miles.
+violent - шалений, насильницький - It was a violent storm.
+tribe - плем’я - The ancient tribe lived near the river.
+glorious - славетний - The country has a glorious history.
+foray - набіг, мародерство - The enemies made a foray into the village.
+to invade - вторгатися - The army plans to invade the territory.
+obvious - очевидний - It is obvious that he is lying.
+reliable - надійний - We need a reliable car for this trip.
+to repel - відбивати - The guards managed to repel the attack.
+to bypass - обійти - They tried to bypass the security checkpoint.
+ditch - канава, траншея - The car drove into a ditch.
+rampart - вал - The castle was protected by a high rampart.
+to total - дорівнювати - The expenses total one thousand dollars.
+warrior - воїн - He fought like a brave warrior.
+to increase - збільшувати - We need to increase the number of patrols.
+to capture - захоплювати - They managed to capture the smuggler.
+to detect - виявляти - The scanner can detect hidden metals.
+possession - володіння, власність - He had illegal drugs in his possession.
+nomad - кочівник - The nomads moved across the desert.
+to impress - вразити - She wanted to impress the interviewers.
+border guard division - відділ ДПС - He serves in the local border guard division.
+undergo - переносити, підлягати - All recruits must undergo strict training.
+stage - ступінь, етап - This is the final stage of the operation.
+result in - мати наслідком - This mistake could result in a disaster.
+combine - об’єднувати - Let's combine our efforts.
+particular - особливий - Pay attention to this particular detail.
+offence - образа, порушення - Crossing the border illegally is a serious offence.
+admission - прийняття, впускання - Admission to the base is restricted.
+encompass - містити, охоплювати - The plan encompasses several different strategies.
+assign - призначати - They will assign a new commander tomorrow.
+subordinate - підпорядкувати - The local unit is subordinate to the headquarters.
+attempt - спроба - He made an attempt to escape.
+detachment - загін - A detachment of soldiers was sent to the border.
+stateless - без громадянства - The man proved to be stateless.
+aforesaid - вищезазначений - The aforesaid rules must be followed.
+allocate - призначати, розподіляти - We need to allocate more resources to the project.
+property - власність - This building is private property.
+deputy - заступник - I need to speak with the deputy chief.
+participate - брати участь - Every officer must participate in the training.
+restrain - стримувати - The police had to restrain the aggressive man.
+process data - обробляти інформацію - The computer takes time to process data.
+peculiar - особливий, специфічний - He has a peculiar way of speaking.
+establishment - установа - This is a highly secure establishment.
+to obtain the right - отримати право - You must pass the exam to obtain the right to drive.
+cargo - вантаж - The ship carried heavy cargo.
+ferry - поромна переправа - We crossed the river by ferry.
+pedestrian - пішохід - The driver must stop for the pedestrian.
+to operate - працювати, діяти - Do you know how to operate this machine?
+device - прилад - This device is used for checking passports.
+to comply with - задовольнити запит, відповідати - You must comply with the safety regulations.
+to provide - забезпечити - We will provide you with all necessary information.
+to enable - дати можливість - This ID will enable you to enter the building.
+keen power of observation - здатність проникливого спостереження - A detective needs a keen power of observation.
+persistant - наполегливий - She is very persistant in achieving her goals.
+hiding place - місце схованки - The dog found the drugs in a clever hiding place.
+reveal - викривати - The investigation revealed the truth.
+to maintain contact - підтримувати зв’язок - It is vital to maintain contact with the base.
+identify - ідентифікувати - Can you identify the man in this photo?
+interstate - міждержавний - The countries signed an interstate agreement.
+joint - спільний - We will conduct a joint operation.
+border post - прикордонний пост - The guards arrived at the border post.
+certain sector - певна ділянка - Your patrol covers a certain sector of the forest.
+to carry out - виконувати - We need to carry out the commander's orders.
+round the clock - цілодобово - The checkpoint operates round the clock.
+terrain - територія - The terrain here is very rocky and difficult.
+to mark - позначати - Please mark the dangerous areas on the map.
+border sign - прикордонний знак - You cannot walk past the border sign.
+to use - використовувати - You are allowed to use your weapon only for self-defense.
+special path - спеціальна стежка - Follow the special path through the mountains.
+to check - перевіряти - The officer will check your bags.
+to detect - виявляти - We use dogs to detect explosives.
+traces and signs - сліди та ознаки - Look for any traces and signs of illegal crossing.
+to violate - порушувати - If you violate the law, you will be arrested.
+control trail zone / control border strip - КСС (контрольно-слідова смуга) - Nobody is allowed to step on the control border strip.
+to establish - встановлювати - We need to establish a new perimeter.
+rear - тил - Leave the supplies in the rear.
+barrier - шлагбаум - Wait until the barrier is lifted.
+movement - рух - Any movement in this area will be noticed.
+to detain - затримувати - The guards have the right to detain suspects.
+detention - затримка, тримання під вартою - He is currently in detention.
+to define / demark - визначити, демаркувати кордони - The commission met to demark the new border.
+patrol - дозор - The night patrol starts at midnight.
+sentry - часовий - The sentry did not let anyone pass.
+listening post - секрет - They set up a listening post near the river.
+chief - начальник - The chief will arrive in ten minutes.
+search - пошук - The search for the missing child continues.
+scout group - пошукова група - The scout group found a hidden path.
+covering detachment - заслін - The covering detachment blocked the road.
+to be responsible for - бути відповідальним за - You will be responsible for passport control.
+secure - безпечний - Make sure the area is secure.
+to set a mission / to assign a mission - поставити завдання - The general will assign a mission to your team.
+means of intercommunication and observation - засоби зв’язку та спостереження - Check all your means of intercommunication and observation before leaving.
+to intercept - перехопити - We managed to intercept their radio signal.
+controlled substance - заборонена речовина - Cocaine is a controlled substance.
+border control - прикордонний контроль - You must pass border control before boarding.
+border authorities - офіційні представники прикордонної служби - You need permission from the border authorities.
+border patrol - прикордонний наряд - The border patrol noticed a strange car.
+customs officials - представники митниці - Customs officials will inspect your luggage.
+interpreter - перекладач - We need an interpreter to talk to the suspect.
+Consulate - Консульство - You can get a visa at the Consulate.
+Embassy - Посольство - He lost his passport and went to the Embassy.
+to greet - вітати - The officer should greet the traveler politely.
+to address / to appeal - звертатися - You can appeal to the higher court.
+to suggest - пропонувати, радити - I suggest you double-check your documents.
+to warn - попереджати - I must warn you about the severe weather conditions.
+fraudulent / false - обманний, фальшивий - He was arrested for using fraudulent documents.
+to agree / disagree - погоджуватися / не погоджуватися - I disagree with your statement.
+to allow / to permit - дозволяти - We cannot allow you to cross without a visa.
+to forbid / to prohibit - забороняти - The law forbids bringing fresh meat across the border.
+to deny admission - не впустити - The guard had to deny admission due to lack of a visa.
+to wish farewell - бажати щасливої дороги - The officer checked the passport and wished us farewell.
+to enter - входити, в’їжджати - You may enter the country now.
+compartment - купе - Our train compartment was very comfortable.
+tourist agency - туристичне агентство - The tourist agency organized our trip.
+bearer - пред’явник - This document is valid only for the bearer.
+to produce - пред'являти - Please produce your passport and ticket.
+to forget - забувати - Do not forget to declare your cash.
+search / inspection - обшук, огляд - A detailed luggage inspection is required.
+to request - просити, запитувати - The customs officer will request you to open the bag.
+to be on the alert - бути насторожі - Security staff must always be on the alert.
+carefully - уважно - Read the customs declaration carefully.
+aim / purpose - ціль, намір - What is the purpose of your visit?
+to introduce - представити - Let me introduce myself.
+to smuggle in - провезти контрабандою - He tried to smuggle in diamonds.
+Документи та Візи
+precise - стислий, точний - Give me a precise answer.
+holder / bearer - власник - The passport holder must be present.
+valid - дійсний - Is this visa still valid?
+invalid - недійсний - I am sorry, but your ID is invalid.
+via - через - We are travelling to London via Paris.
+to travel - подорожувати - I love to travel by car.
+duly - належним чином - The form must be duly signed.
+to issue - видавати - The consulate will issue your visa tomorrow.
+to state - заявляти - Please state your full name.
+identity - ідентичність, особа - The officer verified his identity.
+competent - компетентний - He is a highly competent specialist.
+public authority - громадський орган влади - This document was issued by a public authority.
+alien - іноземець - Alien citizens must register within three days.
+resident - житель - She is a permanent resident of Canada.
+to sign - підписувати - Please sign at the bottom of the page.
+space - місце - Leave some space for the stamp.
+therefore - отже, тому - You have no visa; therefore, you cannot enter.
+receipt - квитанція - Keep the receipt after paying the fee.
+particulars - подробиці - Please provide all the required particulars.
+to indicate - вказувати - The sign indicates the direction to passport control.
+to notify - сповіщати - We will notify you when your documents are ready.
+forged - підроблений - The expert found out that the signature was forged.
+accident - нещасний випадок - There was a terrible car accident on the road.
+valuable - цінний - Do you have any valuable items in your bag?
+militia / police - міліція / поліція - We called the police immediately.
+exemption - звільнення - He was granted a tax exemption.
+consular duty - консульський збір - You need to pay the consular duty in cash.
+official - офіційний - This is an official government document.
+to fill out / to fill in - заповнити (бланк) - Please fill out this customs form.
+to insert - вносити, вставляти - Insert your card into the reader.
+admission - доступ, в'їзд - Admission is completely free.
+to be admitted - бути прийнятим, мати дозвіл на в’їзд - Only citizens are admitted through this gate.
+certain age - певний вік - You must reach a certain age to buy alcohol.
+legal effect - законна сила - This copy has no legal effect.
+limited - обмежений - You have a limited time to stay here.
+to steal - красти - Someone tried to steal my wallet.
+stolen - вкрадений - My car was stolen last night.
+circumstances of the loss - обставини втрати - Please describe the circumstances of the loss of your passport.
+to endorse - підтвердити, схвалити - The manager must endorse this document.
+to receive / to obtain - отримувати - Where can I obtain a visa application form?
+business visa - службова віза - I travel to Germany on a business visa.
+short-term - короткостроковий - He took a short-term loan.
+to admit - дозволити в’їзд, прийняти - We cannot admit you without proper ID.
+stay - перебування - Enjoy your stay in Ukraine!
+to be denied - не впустити, відмовити - His visa application was denied.
+to complete an application form - заповнити бланк - Please complete an application form in block letters.
+to confirm - підтвердити - I need to confirm my hotel reservation.
+to testify - свідчити - The witness will testify in court tomorrow.
+journey - поїздка - Have a safe journey!
+point of departure - пункт відправлення - What is your point of departure?
+point of destination - пункт призначення - Our point of destination is Rome.
+to run out - закінчитися - My passport expires, time has run out.
+reason - причина - What is the reason for your delay?
+delay - затримка - We apologize for the train's delay.
+to infringe - порушувати - Do not infringe the border regulations.
+calamity - стихійне лихо - The earthquake was a huge calamity.
+Ministry of Foreign Affairs - Міністерство закордонних справ - He works for the Ministry of Foreign Affairs.
+organs of Internal Affairs - органи внутрішніх справ - The organs of Internal Affairs are investigating the case.
+to draw up - оформити - The lawyer will draw up a contract.
+to pay - сплачувати - You have to pay the fine immediately.
+to invite - запрошувати - My friend invited me to visit Poland.
+to recognize - визнавати, впізнавати - I didn't recognize you in that uniform.
+Митниця та Огляд
+according to - згідно з - According to the law, you must declare this cash.
+law - закон - Ignorance of the law is no excuse.
+to clear up - з’ясувати - We need to clear up this misunderstanding.
+belongings / things - речі - Please do not leave your personal belongings unattended.
+to follow - слідувати за - Please follow the officer to the inspection room.
+to need - потребувати - I need some more time to fill out the form.
+to continue - продовжувати - You may continue your trip now.
+to decide - вирішувати - You have to decide what to do next.
+to earn - заробити - How much do you earn per month?
+goods van - товарний вагон - The goods van was full of machinery.
+to find - знаходити - Did you find anything illegal in his bag?
+explanation - пояснення - Can you give me an explanation for this?
+to take off - знімати - Please take off your hat and sunglasses.
+glasses - окуляри - I cannot read the text without my glasses.
+height - зріст - What is your exact height?
+to have one's photo taken - фотографуватися - Look at the camera to have your photo taken.
+age - вік - At your age, you should know better.
+by mistake - помилково - I took his suitcase by mistake.
+owner - власник - Are you the owner of this vehicle?
+own - власний - I saw it with my own eyes.
+to look like - бути схожим - You look like your brother.
+illegally - нелегально - They crossed the border illegally.
+to arrest / to apprehend - затримувати, арештувати - The police had to apprehend the suspect.
+further investigation - подальше розслідування - The items were seized for further investigation.
+to declare - задекларувати - Do you have anything to declare?
+to be duty-free - не обкладати митним збором - These goods are duty-free.
+to be liable to duty - обкладатися митом - Electronics are liable to duty.
+quota-list - перелік товарів (список) - Please check the quota-list for allowed amounts.
+to exceed the quota - перевищувати дозволену кількість - You cannot exceed the quota for cigarettes.
+to stipulate - обумовлювати - The contract stipulates the delivery date.
+prohibited articles list - список заборонених товарів - Weapons are on the prohibited articles list.
+values - коштовності - Put all your values in the safe.
+to state the value - визначити цінність - You must state the value of your camera.
+to vary - відрізнятись - Customs rules may vary from country to country.
+luggage - багаж - Put your luggage on the belt, please.
+to impose - накладати (мито) - The government decided to impose a new tax.
+personal belongings - особисті речі - These are just my personal belongings.
+to pay a duty - сплачувати митні збори - You will have to pay a duty on these perfumes.
+accuracy - точність - Accuracy is very important in filling out forms.
+to conceal - приховувати - He tried to conceal the drugs in his shoes.
+to verify - перевіряти, підтверджувати - The system will verify your biometric data.
+confiscation - конфіскація - Smuggling leads to confiscation of goods.
+fine - штраф - He had to pay a massive fine.
+carriage / car - вагон - My seat is in carriage number five.
+passage / corridor - прохід - Don't block the corridor with your bags.
+service compartment - службове купе - Only staff can enter the service compartment.
+porter - носильник - I hired a porter to help with my heavy suitcase.
+suitcase - валіза - Please open your suitcase.
+departure platform - перон - The train to Kyiv leaves from departure platform 3.
+inquiry office - довідкове бюро - If you are lost, ask at the inquiry office.
+left-luggage office - камера схову - I left my backpack at the left-luggage office.
+to leave - виїжджати, покидати - The train is about to leave.
+to leave on time - відправлятися згідно розкладу - Thankfully, our train will leave on time.
+to be going to - збиратися щось робити - I am going to read a book during the trip.
+to worry - хвилюватися - Don't worry, we won't miss the train.
+to solve - вирішувати - The conductor helped to solve our problem.
+conductor / car-attendant - провідник - Show your ticket to the conductor.
+to run behind the schedule - запізнюватись - Due to snow, the train is running behind the schedule.
+to miss - пропустити, запізнитися - Hurry up, or we will miss the train!
+to keep smth handy - тримати напоготові - Keep your passport and ticket handy.
+to fly - летіти - We prefer to fly directly to London.
+to take off - злетіти - The plane will take off in ten minutes.
+to land - приземлятися - We are scheduled to land at 5 PM.
+flight number - номер рейсу - What is your flight number?
+captain - командир польоту - The captain welcomed us aboard.
+navigator - штурман - The navigator calculated the quickest route.
+stewardess - бортпровідниця - The stewardess offered us some water.
+crew - екіпаж - The whole flight crew was very professional.
+crew list - список екіпажу - The captain handed the crew list to the border guard.
+to board the plane - сідати в літак - Passengers for flight 101, please board the plane.
+non-flying weather - нельотна погода - The flight was cancelled due to non-flying weather.
+General Declaration - генеральна декларація - The pilot signed the General Declaration.
+route - маршрут - The plane had to change its route due to the storm.
+to pass through - пройти через - You must pass through the metal detector.
+to wish luck - побажати вдачі - The officer checked my passport and wished me luck.
+admission information - інформація про прийняття - Please provide your admission information.
+expedite - прискорити - We try to expedite the check-in process.
+to complete - завершити - Please wait until the check is completed.
+claim - претензія - The passenger filed a claim for damaged luggage.
+remark - зауваження - The inspector made a remark about the cargo.
+cargo - вантаж - The ship is loading cargo right now.
+to go ashore - сходити на берег - The sailors wanted to go ashore after a long trip.
+to ride at anchor - встати на якір - The vessel will ride at anchor overnight.
+master - капітан торгового судна - The master is responsible for the ship's safety.
+voyage - морська подорож - The voyage across the ocean took two weeks.
+vessel - судно - This is a very large transport vessel.
+to be in order - бути у порядку - All your documents seem to be in order.
+seaman / sailor - моряк - The young sailor stood on the deck.
+port of registry - порт приписки - The ship's port of registry is Odesa.
+to be safe and sound - бути живим та здоровим - They returned home safe and sound.
+stranger - стороння особа - A stranger was spotted near the docks.
+stowaway - безбілетний пасажир - Security caught a stowaway trying to hide on the ship.
+skipper - відправник вантажу (також капітан невеликого судна) - The skipper checked the cargo manifest.
+date-time of arrival / departure - дата/час прибуття/відправлення - Confirm the date-time of arrival with the port authority.
+consignee - отримувач вантажу - The goods will be delivered to the consignee.
+cargo manifest - вантажна декларація - The customs officer requested the cargo manifest.
+Подорож автомобілем
+lorry / truck - вантажівка - The truck was carrying fresh fruit.
+trailer - причіп - The car was pulling a heavy trailer.
+bus / coach - автобус - We traveled across Europe by coach.
+boot / luggage compartment / trunk - багажник - Please open the trunk of your car.
+petrol tank - бензобак - My petrol tank is almost empty.
+bonnet / hood - капот - I need to look under the hood.
+driver - водій - The driver handed over his license.
+driving permit / driving licence - водійські права - You cannot drive without a valid driving licence.
+to park a car - поставити машину на стоянку - You cannot park a car near the terminal.
+you are welcome - будь ласка - Thank you for your help. - You are welcome.
+car plate number / licence plate - номерний знак - The police recorded the licence plate.
+to get off / out - вийти з - The officer asked me to get out of the car.
+to take over - перевозити, брати під контроль - He agreed to take over the driving for a few hours.
+arms - зброя - Do you have any firearms in the vehicle?
+to be in the line of duty - бути при виконанні службових обов’язків - An officer in the line of duty must be respected.
+van - автофургон - They travel around the country in a camper van.
+to treat - пригощати (або ставитись) - He treated me to a cup of coffee.
+speed limit / restriction - обмеження швидкості - Do not exceed the speed limit on this road.
+discrepancy - розбіжність - There is a discrepancy between the VIN code and the documents.
+itinerary - маршрут - What is your planned itinerary for this trip?
         `;
 
         let dictionary = [];
@@ -200,12 +597,16 @@
             let needsSave = false;
             for (let line of lines) {
                 line = line.trim();
-                if (!line) continue;
+                // Пропускаємо заголовки типу "Документи та Візи" (рядки без тире)
+                if (!line || !line.includes('-')) continue;
+                
                 let parts = line.split(/\s*[-—–=]\s*/);
                 if (parts.length >= 2) {
                     let eng = parts[0].trim().toLowerCase();
                     let ukr = parts[1].trim().toLowerCase();
-                    let example = parts[2] ? parts[2].trim() : "";
+                    // Якщо в прикладі є ще одне тире, збираємо все до кінця
+                    let example = parts.slice(2).join(' - ').trim();
+                    
                     let exists = dictionary.some(w => w.eng === eng);
                     if (!exists && eng !== "" && ukr !== "") {
                         dictionary.push({ eng: eng, ukr: ukr, example: example, weight: 3 });
@@ -238,7 +639,6 @@
 
         function generateExportText() {
             let exportArea = document.getElementById('export-text');
-            // Перетворюємо всі слова в словнику на текст
             let lines = dictionary.map(w => {
                 let ex = w.example ? ` - ${w.example}` : "";
                 return `${w.eng} - ${w.ukr}${ex}`;
@@ -249,19 +649,17 @@
         function copyExport() {
             let exportArea = document.getElementById('export-text');
             exportArea.select();
-            exportArea.setSelectionRange(0, 99999); // Для мобільних пристроїв
+            exportArea.setSelectionRange(0, 99999);
             
             try {
                 navigator.clipboard.writeText(exportArea.value).then(() => {
                     alert("✅ Базу успішно скопійовано! Тепер надішли її другу.");
                 });
             } catch (err) {
-                // Запасний варіант для старих браузерів
                 document.execCommand("copy");
                 alert("✅ Базу скопійовано!");
             }
         }
-        /* ------------------------------- */
 
         function updateStreakOnLoad() {
             let streak = parseInt(localStorage.getItem('myStreak') || "0");
@@ -317,7 +715,6 @@
         function deleteWord(index) {
             if (confirm(`Видалити слово "${dictionary[index].eng}"?`)) {
                 dictionary.splice(index, 1); saveDictionary();
-                // Якщо панель адміна відкрита, оновлюємо текст у ній
                 if (!document.getElementById('admin-panel').classList.contains('hidden')) {
                     generateExportText();
                 }
@@ -336,7 +733,7 @@
                 if (parts.length >= 2) {
                     let eng = parts[0].trim().toLowerCase();
                     let ukr = parts[1].trim().toLowerCase();
-                    let example = parts[2] ? parts[2].trim() : "";
+                    let example = parts.slice(2).join(' - ').trim();
                     
                     let existingWord = dictionary.find(w => w.eng === eng);
                     if (!existingWord && eng !== "" && ukr !== "") {
@@ -351,7 +748,6 @@
                 alert(`Додано ${addedCount} нових слів.`);
                 if (!blitzActive) nextWord();
                 
-                // Якщо панель адміна відкрита, оновлюємо текст у ній
                 if (!document.getElementById('admin-panel').classList.contains('hidden')) {
                     generateExportText();
                 }
